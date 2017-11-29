@@ -18,22 +18,25 @@ public class Test {
 		System.out.println("----------------------------------");
 		Tile tilecross = new TileCross();
 		System.out.println(tilecross.toString());
-		System.out.println(tilecross.getRotation());
 		
 		System.out.println("----------------------------------");
 		Tile tilestraight = new TileStraight();
 		System.out.println(tilestraight.toString());
-		System.out.println(tilestraight.getRotation());
 		
 		System.out.println("----------------------------------");
 		Tile tilebend = new TileBend();
 		System.out.println(tilebend.toString());
-		System.out.println(tilebend.getRotation());
 		
 		System.out.println("----------------------------------");
 		Tile tilet = new TileT();
 		System.out.println(tilet.toString());
-		tilet.setRotation(RotationType.DEGREES_180);
+		tilet.rotate(1);
+		System.out.println("----------------------------------");
+		System.out.println(tilet.toString());
+		tilet.rotate(2);
+		System.out.println("----------------------------------");
+		System.out.println(tilet.toString());
+		tilet.rotate(1);
 		System.out.println("----------------------------------");
 		System.out.println(tilet.toString());
 	}
