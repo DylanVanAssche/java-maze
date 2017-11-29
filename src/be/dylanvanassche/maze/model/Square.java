@@ -22,7 +22,7 @@ public class Square {
 			return "G";
 		}
 		else if(this.isWall()) {
-			return "#";
+			return "█";
 		}
 		else {
 			return " ";
