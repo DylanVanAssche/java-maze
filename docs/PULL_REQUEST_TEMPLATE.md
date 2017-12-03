@@ -5,4 +5,5 @@
     - Fixed #
 
 3. **Testing environment**: 
-    - ModelSim V10.4 PE Student Edition _simulation only_ 
+    - Eclipse IDE with JavaSE-1.8 
+    - OpenSUSE Leap 42.3 x64

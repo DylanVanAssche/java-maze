@@ -4,6 +4,7 @@ package be.dylanvanassche.maze.model;
 
 public enum SquareType {
 	WALL,
+	FREE,
 	GOLD,
-	FREE
+	PLAYER
 }
