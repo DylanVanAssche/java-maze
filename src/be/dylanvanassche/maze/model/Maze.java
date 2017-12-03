@@ -1,11 +1,13 @@
 package be.dylanvanassche.maze.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Maze {
 	public static final int mazeSize = 2; // define n
+	public static final int tileSize = 3;
 	private int currentTileIndex = 0;
-	private List<Tile> tiles; // easy to populate a gridlayout using nextTile()
+	private List<Tile> tiles = new ArrayList<Tile>(); // easy to populate a gridlayout using nextTile()
 	private Player player;
 		
 	public int getCurrentTileIndex() {
@@ -37,13 +39,25 @@ public class Maze {
 	 */
 	public Maze(String playerName) {
 		// n^2 tiles
-		for(int i=0; i < 4*Math.pow(mazeSize, 2); i++) {
+		for(int i=0; i<4*Math.pow(mazeSize, 2); i++) 
+		{
 			this.getTiles().add(this.generateRandomTile());
 		}
-		// get random central position
 		
+		this.getTiles().get((int)(Math.random()*4*Math.pow(mazeSize, 2))).enableGold();
+						
 		// create new player
-		this.setPlayer(new Player(playerName, new Position(0,0)));
+		this.setPlayer(new Player(playerName, generateRandomCenteredPosition()));
+		this.getSquareAtPosition(this.getPlayer().getPosition()).setContent(SquareType.PLAYER);
+	}
+	
+	public String toString() {
+		String mazeString = "";
+		for(int i=0; i<4*Math.pow(mazeSize, 2); i++) 
+		{
+			mazeString += this.getTiles().get(i).toString() + "\n";
+		}
+		return mazeString;
 	}
 
 	/*
@@ -65,6 +79,85 @@ public class Maze {
 	}
 	
 	/*
+	 * @brief: generates a random Position in the centre of a random Tile
+	 * @return: Position
+	 */
+	private Position generateRandomCenteredPosition() {
+		int positionX = tileSize/2;
+		int positionY = tileSize/2;
+		for(int i=0; i < (int)(Math.random()*(mazeSize*mazeSize-1)); i++) 
+		{
+			if(Math.random() < 0.5) {
+				positionX += tileSize;
+			}
+			else 
+			{
+				positionY += tileSize;
+			}
+		}
+		return new Position(positionX, positionY);
+	}
+	
+	/*
+	 * @brief: Checks which square will be on the next position
+	 * @return: SquareType
+	 */
+	private Square getSquareAtPosition(Position nextPosition) {
+		// Locate the tile in the maze
+		/*
+		 * Algorithm: 
+		 * 	1) Start at coordinate 0
+		 *  2) Retrieve position
+		 *  3) While position - tileSize > 0 increase coordinate
+		 *  4) Break when position < 0
+		 */
+		System.out.println("POS: " + nextPosition);		
+		
+		// Search for tile X coordinate
+		int tileX = 0;
+		int tempValueX = nextPosition.getX();
+		while(true) {
+			tempValueX = tempValueX - tileSize;
+			if(tempValueX < 0)
+			{
+				break;
+			}
+			tileX++;
+		}
+		
+		// Search for tile Y coordinate
+		int tileY = 0;
+		int tempValueY = nextPosition.getY();
+		while(true) {
+			tempValueY = tempValueY - tileSize;
+			if(tempValueY < 0)
+			{
+				break;
+			}
+			tileY++;
+		}
+		
+		System.out.println("TILE: " + new Position(tileX, tileY));
+		
+		// Locate the square in the tile
+		/*
+		 * Algorithm: 
+		 * 	1) Translate Tile coordinate to Square coordinate: offset = coordinateTile * tileSize
+		 *  2) Substract the tileCoordinateOffset from our position: coordinateSquareWithinTile = position - offset
+		 */
+		int squareX = nextPosition.getX() - tileX*tileSize;
+		int squareY = nextPosition.getY() - tileY*tileSize;
+		
+		System.out.println("SQUARE: " + new Position(squareX, squareY));
+		
+		// Retrieve the tile and the Square based on the coordinates
+		Tile nextTile = this.getTiles().get(tileY*mazeSize*2 + tileX);
+		Square nextSquare = nextTile.getSquares()[squareX][squareY];
+		
+		return nextSquare;
+	}
+	
+	/*
 	 * @brief: iterator to retrieve the tiles in the maze
 	 * @return: Tile
 	 */
@@ -81,27 +174,53 @@ public class Maze {
 		return this.getTiles().get(index);
 	}
 	
-	public SquareType moveTo(Position nextPosition) {
-		// Locate the tile in the maze
-		double tileRow = Math.floor(nextPosition.getX()/(2*mazeSize*1.0));
-		double tileColumn = Math.floor(nextPosition.getY()/(2*mazeSize*1.0));
-		int tileListIndex = (int)((2*mazeSize)*tileRow + tileColumn);
-		Tile nextTile = this.getTiles().get(tileListIndex);
+	/*
+	 * @brief: moves the player one square
+	 * @throws: UnknownMovementDirection in case a movement is requested that isn't valid
+	 */
+	public void movePlayer(MovementType movement) throws UnknownMovementDirection, WeHaveAWinner, BadMovementDirection {
+		Position nextPos = new Position(this.getPlayer().getPosition().getX(), this.getPlayer().getPosition().getY());
+		System.out.println("Now:" + nextPos);
 		
-		// Locate the square in the tile
-		int squareRow = (int)(Math.floor(nextPosition.getX()/(2*mazeSize*1.0)) - tileRow);
-		int squareColumn = (int)(Math.floor(nextPosition.getY()/(2*mazeSize*1.0)) - tileColumn);
-		Square nextSquare = nextTile.getSquares()[squareRow][squareColumn];
+		// Calculate next position
+		switch(movement) 
+		{
+		case UP:
+			nextPos.setY(nextPos.getY() + 1);
+			break;
+		case DOWN:
+			nextPos.setY(nextPos.getY() - 1);
+			break;
+		case RIGHT:
+			nextPos.setX(nextPos.getX() + 1);
+			break;
+		case LEFT:
+			nextPos.setX(nextPos.getX() - 1);
+			break;
+		default:
+			throw new UnknownMovementDirection();
+		}
+		System.out.println("New:" + nextPos);
 		
-		// Check what kind of square it is
-		if(nextSquare.isFree() == true) // Move allowed
+		if(this.getSquareAtPosition(nextPos).isFree() == true) 
 		{
-			return SquareType.FREE;
+			System.out.println("FREE MOVE");
+			this.getSquareAtPosition(this.getPlayer().getPosition()).setContent(SquareType.FREE);
+			this.getPlayer().setPosition(nextPos);
+			this.getSquareAtPosition(nextPos).setContent(SquareType.PLAYER);
 		}
-		else if(nextSquare.isGold() == true) // Don't move, we have a winner!
+		else if(this.getSquareAtPosition(nextPos).isGold() == true) 
 		{
-			return SquareType.GOLD;
+			System.out.println("GOLD MOVE");
+			this.getSquareAtPosition(this.getPlayer().getPosition()).setContent(SquareType.FREE);
+			this.getPlayer().setPosition(nextPos);
+			this.getSquareAtPosition(nextPos).setContent(SquareType.PLAYER);
+			throw new WeHaveAWinner("You won!\nCongratulations!");
 		}
-		return SquareType.WALL; // Don't move, we hit a wall!
+		else 
+		{
+			System.out.println("WALL MOVE");
+			throw new BadMovementDirection("You can't move through walls!");
+		}
 	}
 }

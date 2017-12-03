@@ -73,8 +73,16 @@ public abstract class Tile {
 			for(int j=0; j<tileSize; j++) {
 				tileString += this.getSquares()[i][j];
 			}
-			tileString += "\n";
+			if(i < tileSize) {
+				tileString += "\n";
+			}
 		}
+		// Remove obsolete character "\n" at the end
+		tileString = tileString.substring(0,tileString.length()-1); 
 		return tileString;
+	}
+	
+	public void enableGold() {
+		this.getSquares()[tileSize/2][tileSize/2].setContent(SquareType.GOLD);
 	}
 }

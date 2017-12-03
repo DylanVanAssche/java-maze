@@ -24,4 +24,8 @@ public class Position {
 		this.setY(y);
 	}
 	
+	public String toString() {
+		return "(" + this.getX() + "," + this.getY() + ")";
+	}
+	
 }

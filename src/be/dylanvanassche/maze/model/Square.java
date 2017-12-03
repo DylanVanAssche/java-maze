@@ -19,10 +19,13 @@ public class Square {
 	
 	public String toString() {
 		if(this.isGold()) {
-			return "G";
+			return "$";
 		}
 		else if(this.isWall()) {
 			return "█";
+		}
+		else if(this.isPlayer()) {
+			return "X";
 		}
 		else {
 			return " ";
@@ -30,14 +33,18 @@ public class Square {
 	}
 	
 	public boolean isGold() {
-		return getContent() == SquareType.GOLD;
+		return this.getContent() == SquareType.GOLD;
 	}
 	
 	public boolean isWall() {
-		return getContent() == SquareType.WALL;
+		return this.getContent() == SquareType.WALL;
+	}
+	
+	public boolean isPlayer() {
+		return this.getContent() == SquareType.PLAYER;
 	}
 	
 	public boolean isFree() {
-		return getContent() == SquareType.FREE;
+		return this.getContent() == SquareType.FREE;
 	}
 }
