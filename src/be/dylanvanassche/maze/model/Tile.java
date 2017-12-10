@@ -5,6 +5,9 @@ package be.dylanvanassche.maze.model;
 public abstract class Tile {
 	public static final int tileSize = 3; // define
 	private Square[][] squares = new Square[tileSize][tileSize];
+	private int currentSquareIndexRow = 0;
+
+	private int currentSquareIndexColumn = 0;
 
 	public Square[][] getSquares() {
 		return squares;
@@ -14,6 +17,22 @@ public abstract class Tile {
 		this.squares = squares;
 	}
 
+	public int getCurrentSquareIndexRow() {
+		return currentSquareIndexRow;
+	}
+
+	public void setCurrentSquareIndexRow(int currentSquareIndexRow) {
+		this.currentSquareIndexRow = currentSquareIndexRow;
+	}
+
+	public int getCurrentSquareIndexColumn() {
+		return currentSquareIndexColumn;
+	}
+
+	public void setCurrentSquareIndexColumn(int currentSquareIndexColumn) {
+		this.currentSquareIndexColumn = currentSquareIndexColumn;
+	}
+	
 	/*
 	 *  @brief: Transpose a matrix
 	 *  @description: Linear Algebra: rotating a matrix requires to transpose the matrix and then swap the columns
@@ -52,6 +71,7 @@ public abstract class Tile {
 	 * @brief: rotates the squares matrix by 90 degrees
 	 */
 	public void rotate(long rotationAmount) {
+		System.out.println(rotationAmount);
 		Square[][] squaresTemp = new Square[tileSize][tileSize];
 		squaresTemp = this.getSquares();
 		for(int rotations = 0; rotations < rotationAmount; rotations++) 
@@ -63,7 +83,7 @@ public abstract class Tile {
 	}
 	
 	public Tile() {
-		// Choose random rotation when at construction time
+		// Choose random rotation at construction time
 		this.rotate(Math.round(Math.random()*3));
 	}
 	
@@ -84,5 +104,29 @@ public abstract class Tile {
 	
 	public void enableGold() {
 		this.getSquares()[tileSize/2][tileSize/2].setContent(SquareType.GOLD);
+	}
+
+	public Square nextSquare() {
+		int indexRow = this.getCurrentSquareIndexRow();
+		int indexColumn = this.getCurrentSquareIndexColumn();
+		
+		if(indexRow < tileSize-1) {
+			System.out.println("ROW++");
+			this.setCurrentSquareIndexRow(indexRow + 1);
+		}
+		else {
+			this.setCurrentSquareIndexRow(0);
+			
+			if(indexColumn < tileSize-1) {
+				System.out.println("COLUMN++");
+				this.setCurrentSquareIndexColumn(indexColumn + 1);
+			}
+			else {
+				this.setCurrentSquareIndexColumn(0);
+			}
+		}
+		
+		System.out.println(indexRow + "," + indexColumn);
+		return this.getSquares()[indexRow][indexColumn];
 	}
 }
