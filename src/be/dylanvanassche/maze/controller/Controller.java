@@ -74,5 +74,10 @@ public class Controller {
 		System.out.println(this.getMaze().getPlayer().getName());
 		this.getMainFrame().newGame();
 	}
+	
+	public void movePlayer(MovementType movement) throws UnknownMovementDirection, BadMovementDirection, WeHaveAWinner {
+		this.getMaze().movePlayer(movement);
+		this.getMainFrame().updateGame();
+	}
 	 
 }

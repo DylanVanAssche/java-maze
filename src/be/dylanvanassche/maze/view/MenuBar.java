@@ -115,5 +115,6 @@ public class MenuBar extends JMenuBar {
 				}
 			}
 		});
+		this.setVisible(true);
 	}
 }

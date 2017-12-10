@@ -71,7 +71,6 @@ public abstract class Tile {
 	 * @brief: rotates the squares matrix by 90 degrees
 	 */
 	public void rotate(long rotationAmount) {
-		System.out.println(rotationAmount);
 		Square[][] squaresTemp = new Square[tileSize][tileSize];
 		squaresTemp = this.getSquares();
 		for(int rotations = 0; rotations < rotationAmount; rotations++) 
@@ -80,11 +79,6 @@ public abstract class Tile {
 			squaresTemp = this.swap(squaresTemp);
 		}
 		this.setSquares(squaresTemp);
-	}
-	
-	public Tile() {
-		// Choose random rotation at construction time
-		this.rotate(Math.round(Math.random()*3));
 	}
 	
 	public String toString() {
@@ -102,23 +96,37 @@ public abstract class Tile {
 		return tileString;
 	}
 	
+	/*
+	 * @brief: set the Player in the middle of Tile on a specific Square.
+	 */
 	public void enableGold() {
 		this.getSquares()[tileSize/2][tileSize/2].setContent(SquareType.GOLD);
 	}
+	
+	/*
+	 * @brief: set the Player in the middle of Tile on a specific Square. The new Position is calculated and returned.
+	 * @return: Position
+	 */
+	public Position enablePlayer() {
+		this.getSquares()[tileSize/2][tileSize/2].setContent(SquareType.PLAYER);
+		return new Position(this.getSquares()[tileSize/2][tileSize/2], this);
+	}
 
+	/*
+	 * @brief: iterator for all Squares in the Tile
+	 * @return: Square
+	 */
 	public Square nextSquare() {
 		int indexRow = this.getCurrentSquareIndexRow();
 		int indexColumn = this.getCurrentSquareIndexColumn();
 		
 		if(indexRow < tileSize-1) {
-			System.out.println("ROW++");
 			this.setCurrentSquareIndexRow(indexRow + 1);
 		}
 		else {
 			this.setCurrentSquareIndexRow(0);
 			
 			if(indexColumn < tileSize-1) {
-				System.out.println("COLUMN++");
 				this.setCurrentSquareIndexColumn(indexColumn + 1);
 			}
 			else {
@@ -128,5 +136,34 @@ public abstract class Tile {
 		
 		System.out.println(indexRow + "," + indexColumn);
 		return this.getSquares()[indexRow][indexColumn];
+	}
+	
+	public SquareIndex getPositionFromSquare(Square square) throws SquareUnavailable {
+		int rowIndex = -1;
+		int columnIndex = -1;
+		for(int i = 0; i < tileSize; i++) {
+			for(int j = 0; j < tileSize; j++) {
+				if(this.getSquares()[i][j] == square) {
+					rowIndex = j;
+					columnIndex = i;
+				}
+			}
+		}
+		if(rowIndex == -1 || columnIndex == -1) {
+			throw new SquareUnavailable("This Square isn't located in the current Tile!");
+		}
+		return new SquareIndex(rowIndex, columnIndex);
+	}
+	
+	public Square getSquareFromPosition(SquareIndex squareIndex) throws ArrayIndexOutOfBoundsException {
+		Square square = null;
+		for(int i = 0; i < tileSize; i++) {
+			for(int j = 0; j < tileSize; j++) {
+				if(this.getSquares()[i][j] == this.getSquares()[squareIndex.getRowIndex()][squareIndex.getColumnIndex()]) {
+					square = this.getSquares()[i][j];
+				}
+			}
+		}
+		return square;
 	}
 }

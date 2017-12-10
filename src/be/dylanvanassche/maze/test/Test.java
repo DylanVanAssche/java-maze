@@ -6,7 +6,9 @@ import be.dylanvanassche.maze.model.*;
 
 public class Test {
 	public static void main(String[] args) throws UnknownMovementDirection, WeHaveAWinner, BadMovementDirection  {
-		Maze maze = new Maze("Jefke");
+		TileT tilet = new TileT();
+		System.out.println(tilet);
+		/*Maze maze = new Maze("Jefke");
 		System.out.println(maze.getPlayer().getPosition());
 		try 
 		{
@@ -29,6 +31,6 @@ public class Test {
 		System.out.println("***************************************************************");
 		maze.movePlayer(MovementType.LEFT);
 		System.out.println("***************************************************************");
-		maze.movePlayer(MovementType.LEFT);
+		maze.movePlayer(MovementType.LEFT);*/
 	}
 }

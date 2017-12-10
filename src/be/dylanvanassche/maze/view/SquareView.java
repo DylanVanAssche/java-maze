@@ -32,7 +32,7 @@ private Square square;
 		this.setController(c);
 		this.setSquare(s);
 		this.setLayout(new FlowLayout());
-		this.setVisible(true);
 		this.add(new JLabel(this.getSquare().toString()));
+		this.setVisible(true);
 	}
 }

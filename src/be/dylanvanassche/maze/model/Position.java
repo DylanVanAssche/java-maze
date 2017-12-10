@@ -3,29 +3,32 @@
 package be.dylanvanassche.maze.model;
 
 public class Position {
-	private int x = 0;
-	private int y = 0;
+	private Square square;
+	private Tile tile;
 	
-	public int getX() {
-		return x;
+	public Square getSquare() {
+		return square;
 	}
-	public void setX(int x) {
-		this.x = x;
+
+	public void setSquare(Square square) {
+		this.square = square;
 	}
-	public int getY() {
-		return y;
+
+	public Tile getTile() {
+		return tile;
 	}
-	public void setY(int y) {
-		this.y = y;
+
+	public void setTile(Tile tile) {
+		this.tile = tile;
 	}
-	
-	public Position(int x, int y) {
-		this.setX(x);
-		this.setY(y);
+
+	public Position(Square square, Tile tile) {
+		this.setSquare(square);
+		this.setTile(tile);
 	}
 	
 	public String toString() {
-		return "(" + this.getX() + "," + this.getY() + ")";
+		return this.getSquare() + " from " + this.getTile();
 	}
 	
 }

@@ -13,5 +13,6 @@ public class TileStraight extends Tile {
 
 	public TileStraight() {
 		super.setSquares(squares);
+		super.rotate(Math.round(Math.random()*3));
 	}
 }

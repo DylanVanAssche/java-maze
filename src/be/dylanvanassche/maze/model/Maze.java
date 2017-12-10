@@ -10,7 +10,7 @@ public class Maze {
 	private int currentTileIndex = 0;
 	private List<Tile> tiles = new ArrayList<Tile>(); // easy to populate a gridlayout using nextTile()
 	private Player player;
-		
+
 	public int getCurrentTileIndex() {
 		return currentTileIndex;
 	}
@@ -44,14 +44,14 @@ public class Maze {
 		{
 			this.getTiles().add(this.generateRandomTile());
 		}
-		
+
+		// create new player and enable gold
+		this.setPlayer(new Player(playerName));
 		this.getTiles().get((int)(Math.random()*4*Math.pow(mazeSize, 2))).enableGold();
-						
-		// create new player
-		this.setPlayer(new Player(playerName, generateRandomCenteredPosition()));
-		this.getSquareAtPosition(this.getPlayer().getPosition()).setContent(SquareType.PLAYER);
+		Position newPlayerPosition = this.getTiles().get((int)(Math.random()*4*Math.pow(mazeSize, 2))).enablePlayer();
+		this.getPlayer().setPosition(newPlayerPosition);
 	}
-	
+
 	public String toString() {
 		String mazeString = "";
 		for(int i=0; i<4*Math.pow(mazeSize, 2); i++) 
@@ -78,93 +78,14 @@ public class Maze {
 		}
 		return new TileStraight();
 	}
-	
-	/*
-	 * @brief: generates a random Position in the centre of a random Tile
-	 * @return: Position
-	 */
-	private Position generateRandomCenteredPosition() {
-		int positionX = tileSize/2;
-		int positionY = tileSize/2;
-		for(int i=0; i < (int)(Math.random()*(mazeSize*mazeSize-1)); i++) 
-		{
-			if(Math.random() < 0.5) {
-				positionX += tileSize;
-			}
-			else 
-			{
-				positionY += tileSize;
-			}
-		}
-		return new Position(positionX, positionY);
-	}
-	
-	/*
-	 * @brief: Checks which square will be on the next position
-	 * @return: SquareType
-	 */
-	private Square getSquareAtPosition(Position nextPosition) {
-		// Locate the tile in the maze
-		/*
-		 * Algorithm: 
-		 * 	1) Start at coordinate 0
-		 *  2) Retrieve position
-		 *  3) While position - tileSize > 0 increase coordinate
-		 *  4) Break when position < 0
-		 */
-		System.out.println("POS: " + nextPosition);		
-		
-		// Search for tile X coordinate
-		int tileX = 0;
-		int tempValueX = nextPosition.getX();
-		while(true) {
-			tempValueX = tempValueX - tileSize;
-			if(tempValueX < 0)
-			{
-				break;
-			}
-			tileX++;
-		}
-		
-		// Search for tile Y coordinate
-		int tileY = 0;
-		int tempValueY = nextPosition.getY();
-		while(true) {
-			tempValueY = tempValueY - tileSize;
-			if(tempValueY < 0)
-			{
-				break;
-			}
-			tileY++;
-		}
-		
-		System.out.println("TILE: " + new Position(tileX, tileY));
-		
-		// Locate the square in the tile
-		/*
-		 * Algorithm: 
-		 * 	1) Translate Tile coordinate to Square coordinate: offset = coordinateTile * tileSize
-		 *  2) Subtract the tileCoordinateOffset from our position: coordinateSquareWithinTile = position - offset
-		 */
-		int squareX = nextPosition.getX() - tileX*tileSize;
-		int squareY = nextPosition.getY() - tileY*tileSize;
-		
-		System.out.println("SQUARE: " + new Position(squareX, squareY));
-		
-		// Retrieve the tile and the Square based on the coordinates
-		Tile nextTile = this.getTiles().get(tileY*mazeSize*2 + tileX);
-		Square nextSquare = nextTile.getSquares()[squareX][squareY];
-		
-		return nextSquare;
-	}
-	
+
 	/*
 	 * @brief: iterator to retrieve the tiles in the maze
 	 * @return: Tile
 	 */
 	public Tile nextTile() {
 		int index = this.getCurrentTileIndex();
-		if(index < Math.pow(2*mazeSize, 2)) 
+		if(index < Math.pow(2*mazeSize, 2)-1) 
 		{
 			this.setCurrentTileIndex(index + 1);
 		}
@@ -176,52 +97,180 @@ public class Maze {
 	}
 	
 	/*
-	 * @brief: moves the player one square
-	 * @throws: UnknownMovementDirection in case a movement is requested that isn't valid
+	 * @brief: returns the next Tile based on a Movement of the Player
+	 * @description: ArrayList of Tiles, the RIGHT and LEFT Tiles are next to the current Tile. 
+	 * The UP and DOWN Tiles are 1 Math.pow(2*mazeSize, 2) away from the current Tile
+	 * @return: Tile
 	 */
-	public void movePlayer(MovementType movement) throws UnknownMovementDirection, WeHaveAWinner, BadMovementDirection {
-		Position nextPos = new Position(this.getPlayer().getPosition().getX(), this.getPlayer().getPosition().getY());
-		System.out.println("Now:" + nextPos);
-		
-		// Calculate next position
+	private Tile nextTileFromMovement(MovementType movement) throws TileUnavailable, UnknownMovementDirection, BadMovementDirection {
+		// Retrieve the tileIndex by searching it in the ArrayList of Tiles
+		int tileIndex = -1;
+		for(int i=0; i < Math.pow(2*mazeSize, 2)-1; i++) {
+			if(this.getPlayer().getPosition().getTile() == this.getTiles().get(i)) {
+				tileIndex = i;
+			}
+		}
+		if(tileIndex == -1) {
+			throw new TileUnavailable("This Tile isn't located in the current Maze!");
+		}
+		System.out.println(tileIndex);
+		System.out.println(this.getTiles().get(tileIndex));
+		// Calculate the new tileIndex
 		switch(movement) 
 		{
-		case UP:
-			nextPos.setY(nextPos.getY() + 1);
-			break;
-		case DOWN:
-			nextPos.setY(nextPos.getY() - 1);
+		case LEFT:
+			tileIndex -= 1;
 			break;
 		case RIGHT:
-			nextPos.setX(nextPos.getX() + 1);
+			tileIndex += 1;
 			break;
-		case LEFT:
-			nextPos.setX(nextPos.getX() - 1);
+		case DOWN:
+			tileIndex += 2*mazeSize;
+			break;
+		case UP:
+			tileIndex -= 2*mazeSize;
 			break;
 		default:
 			throw new UnknownMovementDirection();
 		}
-		System.out.println("New:" + nextPos);
 		
-		if(this.getSquareAtPosition(nextPos).isFree() == true) 
-		{
-			System.out.println("FREE MOVE");
-			this.getSquareAtPosition(this.getPlayer().getPosition()).setContent(SquareType.FREE);
-			this.getPlayer().setPosition(nextPos);
-			this.getSquareAtPosition(nextPos).setContent(SquareType.PLAYER);
+		System.out.println(tileIndex);
+		try {
+			System.out.println(this.getTiles().get(tileIndex));
+			return this.getTiles().get(tileIndex);
 		}
-		else if(this.getSquareAtPosition(nextPos).isGold() == true) 
+		catch(ArrayIndexOutOfBoundsException exception) {
+			System.out.println("PLAYER MOVE TO WALL");
+			throw new BadMovementDirection("You can't move through walls!");
+		}
+	}
+	
+	/*
+	 * @brief: returns the Square for the nextTile based on the Movement from the Player
+	 * @description: nextTileFromMovement() needs to be called first to retrieve the nextTile. 
+	 * This is only needed for movement that goes outside the current Tile of the Player.
+	 * @return: Square
+	 */
+	private Square nextSquareFromMovement(MovementType movement, Tile nextTile) throws UnknownMovementDirection {
+		Square oldSquare = this.getPlayer().getPosition().getSquare();
+		try 
 		{
-			System.out.println("GOLD MOVE");
-			this.getSquareAtPosition(this.getPlayer().getPosition()).setContent(SquareType.FREE);
-			this.getPlayer().setPosition(nextPos);
-			this.getSquareAtPosition(nextPos).setContent(SquareType.PLAYER);
+			SquareIndex oldSquarePosition = this.getPlayer().getPosition().getTile().getPositionFromSquare(oldSquare);
+			// Calculate the new squareIndex
+			System.out.println("OLD:" + oldSquarePosition);
+			switch(movement) 
+			{
+			case LEFT:
+				oldSquarePosition.setColumnIndex(tileSize-1);
+				break;
+			case RIGHT:
+				oldSquarePosition.setColumnIndex(0);
+				break;
+			case DOWN:
+				oldSquarePosition.setRowIndex(0);
+				break;
+			case UP:
+				oldSquarePosition.setRowIndex(tileSize-1);
+				break;
+			default:
+				throw new UnknownMovementDirection("MovementType is unknown!");
+			}
+			
+			// Return the next Square
+			System.out.println("NEW:" + oldSquarePosition);
+			return nextTile.getSquareFromPosition(oldSquarePosition);
+		}
+		catch(SquareUnavailable exception) {
+			throw new UnknownMovementDirection(exception.getMessage());
+		}
+	}
+	
+	private void updatePositions(Square newSquare, Square oldSquare) throws WeHaveAWinner, BadMovementDirection {
+		System.out.println("NEW SQUARE:" + newSquare);
+		System.out.println("OLD SQUARE:" + oldSquare);
+		if(newSquare.isFree() == true) 
+		{
+			System.out.println("PLAYER MOVES FREELY");
+			this.getPlayer().setPosition(new Position(newSquare, this.getPlayer().getPosition().getTile()));
+			oldSquare.setContent(SquareType.FREE); // Player can only be on FREE Squares
+			newSquare.setContent(SquareType.PLAYER);
+		}
+		else if(newSquare.isGold() == true) 
+		{
+			System.out.println("PLAYER IS NOW ON GOLD");
+			this.getPlayer().setPosition(new Position(newSquare, this.getPlayer().getPosition().getTile()));
+			oldSquare.setContent(SquareType.FREE); // Player can only be on FREE Squares
+			newSquare.setContent(SquareType.PLAYER);
 			throw new WeHaveAWinner("You won!\nCongratulations!");
 		}
 		else 
 		{
-			System.out.println("WALL MOVE");
+			System.out.println("PLAYER MOVES INTO WALL");
 			throw new BadMovementDirection("You can't move through walls!");
+		}
+	}
+
+	/*
+	 * @brief: moves the player one square
+	 * @throws: UnknownMovementDirection in case a movement is requested that isn't valid
+	 */
+	public void movePlayer(MovementType movement) throws UnknownMovementDirection, WeHaveAWinner, BadMovementDirection {
+		System.out.println("Moving: " + movement);
+		Square oldSquare = this.getPlayer().getPosition().getSquare();
+		try 
+		{
+			SquareIndex oldSquarePosition = this.getPlayer().getPosition().getTile().getPositionFromSquare(oldSquare);
+			System.out.println("Old: " + oldSquarePosition);
+
+			// Calculate next position
+			/* 			   		 UP 
+			 * 			      COLUMN-1
+			 * 			         ^
+			 * 		             |
+			 * 			         |
+			 * LEFT ROW-1 <------+------> ROW-1 RIGHT
+			 *  		         |	
+			 *                   |
+			 *                   ^
+			 *           	  COLUMN+1
+			 *           	    DOWN		
+			 */
+			switch(movement) 
+			{
+			case LEFT:
+				oldSquarePosition.setColumnIndex(oldSquarePosition.getColumnIndex() - 1);
+				break;
+			case RIGHT:
+				oldSquarePosition.setColumnIndex(oldSquarePosition.getColumnIndex() + 1);
+				break;
+			case DOWN:
+				oldSquarePosition.setRowIndex(oldSquarePosition.getRowIndex() + 1);
+				break;
+			case UP:
+				oldSquarePosition.setRowIndex(oldSquarePosition.getRowIndex() - 1);
+				break;
+			default:
+				throw new UnknownMovementDirection("MovementType is unknown!");
+			}
+			System.out.println("New: " + oldSquarePosition);
+
+			try {
+				Square newSquare = this.getPlayer().getPosition().getTile().getSquareFromPosition(oldSquarePosition);
+				System.out.println("Square: " + newSquare);
+				this.updatePositions(newSquare, oldSquare);	
+			}
+			// We're moving out the current Tile, calculating the next Tile is required!
+			catch(ArrayIndexOutOfBoundsException exception) {
+				System.out.println("Moving out current Tile!");
+				Tile newTile = this.nextTileFromMovement(movement);
+				Square newSquare = this.nextSquareFromMovement(movement, newTile);
+				this.updatePositions(newSquare, oldSquare);	
+			}
+		}
+		// Square isn't located in the Tile from the current Player Position:
+		catch(SquareUnavailable exception) 
+		{
+			throw new UnknownMovementDirection(exception.getMessage());
 		}
 	}
 }
