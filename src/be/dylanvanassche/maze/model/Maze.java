@@ -1,3 +1,4 @@
+// Dylan Van Assche - 3 ABA EI
 package be.dylanvanassche.maze.model;
 
 import java.util.ArrayList;
@@ -143,7 +144,7 @@ public class Maze {
 		/*
 		 * Algorithm: 
 		 * 	1) Translate Tile coordinate to Square coordinate: offset = coordinateTile * tileSize
-		 *  2) Substract the tileCoordinateOffset from our position: coordinateSquareWithinTile = position - offset
+		 *  2) Subtract the tileCoordinateOffset from our position: coordinateSquareWithinTile = position - offset
 		 */
 		int squareX = nextPosition.getX() - tileX*tileSize;
 		int squareY = nextPosition.getY() - tileY*tileSize;
@@ -163,7 +164,7 @@ public class Maze {
 	 */
 	public Tile nextTile() {
 		int index = this.getCurrentTileIndex();
-		if(index < Math.pow(mazeSize, 2)) 
+		if(index < Math.pow(2*mazeSize, 2)) 
 		{
 			this.setCurrentTileIndex(index + 1);
 		}
