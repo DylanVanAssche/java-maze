@@ -9,6 +9,7 @@ import be.dylanvanassche.maze.controller.*;
 import be.dylanvanassche.maze.model.*;
 
 public class MazeView extends JPanel {
+	public static final int mazeSize = 2; // define n
 	private Controller controller;
 	
 	public Controller getController() {
@@ -21,17 +22,15 @@ public class MazeView extends JPanel {
 
 	public MazeView(final Controller c) {
 		this.setController(c);
-		//this.setLayout(new GridLayout(0,4));
-		this.setLayout(new GridLayout(0,8));
+		this.setLayout(new GridLayout(0,4));
 		this.newGame();
 		this.setVisible(true);
 	}
 	
 	public void newGame() {
 		this.removeAll();
-		for(int i = 0; i < 16; i++) {
+		for(int i = 0; i < Math.pow(2*mazeSize, 2); i++) {
 			this.add(new TileView(this.getController(), this.getController().nextMazeTile()));
-			this.add(new JLabel("" + i));
 		}
 	}
 }

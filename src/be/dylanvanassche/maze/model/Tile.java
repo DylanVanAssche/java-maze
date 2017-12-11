@@ -148,6 +148,7 @@ public abstract class Tile {
 				if(this.getSquares()[i][j] == square) {
 					rowIndex = i;
 					columnIndex = j;
+					break;
 				}
 			}
 		}

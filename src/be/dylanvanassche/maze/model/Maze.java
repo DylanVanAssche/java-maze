@@ -1,14 +1,14 @@
 // Dylan Van Assche - 3 ABA EI
 package be.dylanvanassche.maze.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Maze {
 	public static final int mazeSize = 2; // define n
 	public static final int tileSize = 3;
 	private int currentTileIndex = 0;
-	private List<Tile> tiles = new ArrayList<Tile>(); // easy to populate a gridlayout using nextTile()
+	private int currentTileIndexRow = 0;
+	private int currentTileIndexColumn = 0;
+	//private List<Tile> tiles = new ArrayList<Tile>(); // easy to populate a gridlayout using nextTile()
+	private Tile[][] tiles = new Tile[mazeSize*2][mazeSize*2]; //init array
 	private Player player;
 
 	public int getCurrentTileIndex() {
@@ -19,12 +19,29 @@ public class Maze {
 		this.currentTileIndex = currentTileIndex;
 	}
 
-	public List<Tile> getTiles() {
+	/*public List<Tile> getTiles() {
 		return tiles;
 	}
 
 	public void setTiles(List<Tile> tiles) {
 		this.tiles = tiles;
+	}*/
+
+
+	public int getCurrentTileIndexRow() {
+		return currentTileIndexRow;
+	}
+
+	public void setCurrentTileIndexRow(int currentTileIndexRow) {
+		this.currentTileIndexRow = currentTileIndexRow;
+	}
+
+	public int getCurrentTileIndexColumn() {
+		return currentTileIndexColumn;
+	}
+
+	public void setCurrentTileIndexColumn(int currentTileIndexColumn) {
+		this.currentTileIndexColumn = currentTileIndexColumn;
 	}
 
 	public Player getPlayer() {
@@ -35,34 +52,68 @@ public class Maze {
 		this.player = player;
 	}
 
+	public Tile[][] getTiles() {
+		return tiles;
+	}
+
+	public void setTiles(Tile[][] tiles) {
+		this.tiles = tiles;
+	}
+
 	/*
 	 * @brief: constructs a new random Maze
 	 */
 	public Maze(String playerName) {
 		// n^2 tiles
-		for(int i=0; i<4*Math.pow(mazeSize, 2); i++) 
+		/*for(int i=0; i<4*Math.pow(mazeSize, 2); i++) 
 		{
 			this.getTiles().add(this.generateRandomTile());
+		}*/
+		
+		for(int i=0; i<mazeSize*2; i++) {
+			for(int j=0; j<mazeSize*2; j++) {
+				this.getTiles()[i][j] = this.generateRandomTile();
+			}
 		}
 
 		// create new player and enable gold
 		this.setPlayer(new Player(playerName));
-		this.getTiles().get((int)(Math.random()*4*Math.pow(mazeSize, 2))).enableGold();
-		Tile target = this.getTiles().get((int)(Math.random()*4*Math.pow(mazeSize, 2)));
+		//this.getTiles().get((int)(Math.random()*4*Math.pow(mazeSize, 2))).enableGold();
+		this.getTiles()[(int)(Math.random()*2*mazeSize)][(int)(Math.random()*2*mazeSize)].enableGold();
+		//Tile target = this.getTiles().get((int)(Math.random()*4*Math.pow(mazeSize, 2)));
+		Tile target = this.getTiles()[(int)(Math.random()*2*mazeSize)][(int)(Math.random()*2*mazeSize)];
 		while(target.getMiddleSquare().getContent() == SquareType.GOLD) { // It's never possible that the content is WALL
 			System.out.println("Collision GOLD and PLAYER");
-			target = this.getTiles().get((int)(Math.random()*4*Math.pow(mazeSize, 2)));
+			//target = this.getTiles().get((int)(Math.random()*4*Math.pow(mazeSize, 2)));
+			target = this.getTiles()[(int)(Math.random()*2*mazeSize)][(int)(Math.random()*2*mazeSize)];
 		}
-		Position newPlayerPosition = this.getTiles().get((int)(Math.random()*4*Math.pow(mazeSize, 2))).enablePlayer();
+		//Position newPlayerPosition = this.getTiles().get((int)(Math.random()*4*Math.pow(mazeSize, 2))).enablePlayer();
+		Position newPlayerPosition = this.getTiles()[(int)(Math.random()*2*mazeSize)][(int)(Math.random()*2*mazeSize)].enablePlayer();
 		this.getPlayer().setPosition(newPlayerPosition);
 	}
 
-	public String toString() {
+	/*public String toString() {
 		String mazeString = "";
 		for(int i=0; i<4*Math.pow(mazeSize, 2); i++) 
 		{
 			mazeString += this.getTiles().get(i).toString() + "\n";
 		}
+		
+		return mazeString;
+	}*/
+	
+	public String toString() {
+		String mazeString = "";
+		for(int i=0; i<mazeSize*2; i++) {
+			for(int j=0; j<mazeSize*2; j++) {
+				mazeString += this.getTiles()[i][j];
+			}
+			if(i < tileSize) {
+				mazeString += "\n";
+			}
+		}
+		// Remove obsolete character "\n" at the end
+		mazeString = mazeString.substring(0,mazeString.length()-1); 
 		return mazeString;
 	}
 
@@ -88,7 +139,7 @@ public class Maze {
 	 * @brief: iterator to retrieve the tiles in the maze
 	 * @return: Tile
 	 */
-	public Tile nextTile() {
+	/*public Tile nextTile() {
 		int index = this.getCurrentTileIndex();
 		if(index < Math.pow(2*mazeSize, 2)-1) 
 		{
@@ -99,6 +150,30 @@ public class Maze {
 			this.setCurrentTileIndex(0);
 		}
 		return this.getTiles().get(index);
+	}*/
+	
+	/*
+	 * @brief: iterator for all Tiles in the Maze
+	 * @return: Square
+	 */
+	public Tile nextTile() {
+		int indexRow = this.getCurrentTileIndexRow();
+		int indexColumn = this.getCurrentTileIndexColumn();
+		
+		if(indexColumn < 2*mazeSize-1) {
+			this.setCurrentTileIndexColumn(indexColumn + 1);
+		}
+		else {
+			this.setCurrentTileIndexColumn(0);
+			
+			if(indexRow < 2*mazeSize-1) {
+				this.setCurrentTileIndexRow(indexRow + 1);
+			}
+			else {
+				this.setCurrentTileIndexRow(0);
+			}
+		}
+		return this.getTiles()[indexRow][indexColumn];
 	}
 	
 	/*
@@ -109,16 +184,23 @@ public class Maze {
 	 */
 	private Tile nextTileFromMovement(MovementType movement) throws UnknownMovementDirection, BadMovementDirection {
 		// Retrieve the tileIndex by searching it in the ArrayList of Tiles
-		int oldTileIndex = -1;
+		int oldTileIndexRow = -1;
+		int oldTileIndexColumn = -1;
 		int newTileIndex = -1;
-		for(int i=0; i < Math.pow(2*mazeSize, 2)-1; i++) {
-			if(this.getPlayer().getPosition().getTile() == this.getTiles().get(i)) {
-				oldTileIndex = i;
+		for(int i=0; i<mazeSize*2; i++) {
+			for(int j=0; j<mazeSize*2; j++) {
+				if(this.getPlayer().getPosition().getTile() == this.getTiles()[i][j]) {
+					oldTileIndexRow = i;
+					oldTileIndexColumn = j;
+					break;
+				}
 			}
 		}
+		SquareIndex tileIndex = new SquareIndex(oldTileIndexRow, oldTileIndexColumn);
+		
 		
 		// Calculate the new tileIndex
-		switch(movement) 
+		/*switch(movement) 
 		{
 		case LEFT:
 			newTileIndex = oldTileIndex-1;
@@ -134,18 +216,38 @@ public class Maze {
 			break;
 		default:
 			throw new UnknownMovementDirection("MovementType is unknown!");
+		}*/
+		System.out.println("Old TILE INDEX=" + tileIndex);
+		switch(movement) 
+		{
+		case LEFT:
+			tileIndex.setColumnIndex(tileIndex.getColumnIndex() - 1);
+			break;
+		case RIGHT:
+			tileIndex.setColumnIndex(tileIndex.getColumnIndex() + 1);
+			break;
+		case DOWN:
+			tileIndex.setRowIndex(tileIndex.getRowIndex() + 1);
+			break;
+		case UP:
+			tileIndex.setRowIndex(tileIndex.getRowIndex() - 1);
+			break;
+		default:
+			throw new UnknownMovementDirection("MovementType is unknown!");
 		}
 		
 		// If invalid oldTileIndex or movement is between 2 sides of the Maze, throw exception
-		/*if((oldTileIndex == -1) || (newTileIndex%3 == 0 && oldTileIndex%4 == 0) || (oldTileIndex%3 == 0 || newTileIndex%4 == 0))
+		
+		System.out.println("New TILE INDEX=" + tileIndex);
+		/*if((oldTileIndex%4 == 0 && newTileIndex%3 == 0) || (oldTileIndex%3 == 0 && newTileIndex%4 == 0))
 		{
 			throw new BadMovementDirection("You can't move through walls! (1)");
 		}*/
 		
 		try {
-			return this.getTiles().get(newTileIndex);
+			return this.getTiles()[tileIndex.getRowIndex()][tileIndex.getColumnIndex()];
 		}
-		catch(IndexOutOfBoundsException exception) {
+		catch(ArrayIndexOutOfBoundsException exception) {
 			System.out.println("PLAYER MOVES TO WALL, INDEX: " + newTileIndex);
 			throw new BadMovementDirection("You can't move through walls! (2)");
 		}
@@ -212,7 +314,7 @@ public class Maze {
 		else 
 		{
 			System.out.println("PLAYER MOVES INTO WALL");
-			throw new BadMovementDirection("You can't move through walls!");
+			throw new BadMovementDirection("You can't move through walls! (3)");
 		}
 	}
 
