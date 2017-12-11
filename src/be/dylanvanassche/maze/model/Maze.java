@@ -135,8 +135,8 @@ public class Maze {
 		}
 		
 		System.out.println(tileIndex);
+		System.out.println(this.getTiles().get(tileIndex));
 		try {
-			System.out.println(this.getTiles().get(tileIndex));
 			return this.getTiles().get(tileIndex);
 		}
 		catch(ArrayIndexOutOfBoundsException exception) {
@@ -160,10 +160,10 @@ public class Maze {
 			System.out.println("OLD:" + oldSquarePosition);
 			switch(movement) 
 			{
-			case LEFT:
+			case RIGHT:
 				oldSquarePosition.setColumnIndex(tileSize-1);
 				break;
-			case RIGHT:
+			case LEFT:
 				oldSquarePosition.setColumnIndex(0);
 				break;
 			case DOWN:
@@ -263,8 +263,8 @@ public class Maze {
 			catch(ArrayIndexOutOfBoundsException exception) {
 				System.out.println("Moving out current Tile!");
 				Tile newTile = this.nextTileFromMovement(movement);
-				Square newSquare = this.nextSquareFromMovement(movement, newTile);
-				this.updatePositions(newSquare, oldSquare);	
+				//Square newSquare = this.nextSquareFromMovement(movement, newTile);
+				//this.updatePositions(newSquare, oldSquare);
 			}
 		}
 		// Square isn't located in the Tile from the current Player Position:

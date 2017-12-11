@@ -27,7 +27,6 @@ public class TileView extends JPanel {
 	}
 
 	public TileView(final Controller c, Tile tile) {
-		System.out.println("Creating Tile View");
 		this.setController(c);
 		this.setTile(tile);
 		this.setLayout(new GridLayout(0,3));

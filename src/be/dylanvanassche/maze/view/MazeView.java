@@ -20,9 +20,9 @@ public class MazeView extends JPanel {
 	}
 
 	public MazeView(final Controller c) {
-		System.out.println("Creating Maze View");
 		this.setController(c);
-		this.setLayout(new GridLayout(0,4));
+		//this.setLayout(new GridLayout(0,4));
+		this.setLayout(new GridLayout(0,8));
 		this.newGame();
 		this.setVisible(true);
 	}
@@ -31,6 +31,7 @@ public class MazeView extends JPanel {
 		this.removeAll();
 		for(int i = 0; i < 16; i++) {
 			this.add(new TileView(this.getController(), this.getController().nextMazeTile()));
+			this.add(new JLabel("" + i));
 		}
 	}
 }

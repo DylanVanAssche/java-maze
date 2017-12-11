@@ -58,7 +58,6 @@ public class NavigationView extends JPanel {
 	}
 
 	public NavigationView(final Controller c) {
-		System.out.println("Creating NavigationView View");
 		this.setController(c);
 		this.setLayout(new BorderLayout());
 		this.add(this.getUpButton(), BorderLayout.NORTH);

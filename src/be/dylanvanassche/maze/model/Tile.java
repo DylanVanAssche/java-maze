@@ -77,6 +77,7 @@ public abstract class Tile {
 		{
 			squaresTemp = this.transpose(squaresTemp);
 			squaresTemp = this.swap(squaresTemp);
+			System.out.println("Rotating :" + rotations);
 		}
 		this.setSquares(squaresTemp);
 	}
@@ -120,21 +121,19 @@ public abstract class Tile {
 		int indexRow = this.getCurrentSquareIndexRow();
 		int indexColumn = this.getCurrentSquareIndexColumn();
 		
-		if(indexRow < tileSize-1) {
-			this.setCurrentSquareIndexRow(indexRow + 1);
+		if(indexColumn < tileSize-1) {
+			this.setCurrentSquareIndexColumn(indexColumn + 1);
 		}
 		else {
-			this.setCurrentSquareIndexRow(0);
+			this.setCurrentSquareIndexColumn(0);
 			
-			if(indexColumn < tileSize-1) {
-				this.setCurrentSquareIndexColumn(indexColumn + 1);
+			if(indexRow < tileSize-1) {
+				this.setCurrentSquareIndexRow(indexRow + 1);
 			}
 			else {
-				this.setCurrentSquareIndexColumn(0);
+				this.setCurrentSquareIndexRow(0);
 			}
 		}
-		
-		System.out.println(indexRow + "," + indexColumn);
 		return this.getSquares()[indexRow][indexColumn];
 	}
 	
@@ -144,8 +143,8 @@ public abstract class Tile {
 		for(int i = 0; i < tileSize; i++) {
 			for(int j = 0; j < tileSize; j++) {
 				if(this.getSquares()[i][j] == square) {
-					rowIndex = j;
-					columnIndex = i;
+					rowIndex = i;
+					columnIndex = j;
 				}
 			}
 		}
@@ -156,14 +155,6 @@ public abstract class Tile {
 	}
 	
 	public Square getSquareFromPosition(SquareIndex squareIndex) throws ArrayIndexOutOfBoundsException {
-		Square square = null;
-		for(int i = 0; i < tileSize; i++) {
-			for(int j = 0; j < tileSize; j++) {
-				if(this.getSquares()[i][j] == this.getSquares()[squareIndex.getRowIndex()][squareIndex.getColumnIndex()]) {
-					square = this.getSquares()[i][j];
-				}
-			}
-		}
-		return square;
+		return this.getSquares()[squareIndex.getRowIndex()][squareIndex.getColumnIndex()];
 	}
 }
