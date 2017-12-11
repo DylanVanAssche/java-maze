@@ -34,7 +34,6 @@ public class MainFrame extends JFrame {
 	}
 
 	public MainFrame(final Controller c) {
-		System.out.println("Creating Main Frame");
 		this.setController(c);
 		this.getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
 		this.setNavigationView(new NavigationView(this.getController()));
