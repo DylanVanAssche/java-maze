@@ -9,5 +9,6 @@ public class TileBend extends Tile {
 
 	public TileBend() {
 		super.setSquares(squares);
+		super.rotate(Math.round(Math.random()*3));
 	}
 }

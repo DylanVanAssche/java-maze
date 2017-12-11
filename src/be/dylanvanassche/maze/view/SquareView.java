@@ -28,11 +28,10 @@ private Square square;
 	}
 
 	public SquareView(final Controller c, Square s) {
-		System.out.println("Creating Square View");
 		this.setController(c);
 		this.setSquare(s);
 		this.setLayout(new FlowLayout());
-		this.setVisible(true);
 		this.add(new JLabel(this.getSquare().toString()));
+		this.setVisible(true);
 	}
 }

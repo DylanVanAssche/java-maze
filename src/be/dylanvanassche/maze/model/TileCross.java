@@ -11,5 +11,6 @@ public class TileCross extends Tile {
 
 	public TileCross() {
 		super.setSquares(squares);
+		super.rotate(Math.round(Math.random()*3));
 	}
 }

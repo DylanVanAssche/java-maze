@@ -11,5 +11,6 @@ public class TileT extends Tile {
 	
 	public TileT() {
 		super.setSquares(squares);
+		super.rotate(Math.round(Math.random()*3));
 	}
 }
