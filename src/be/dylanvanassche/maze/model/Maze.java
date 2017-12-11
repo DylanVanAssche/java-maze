@@ -161,10 +161,10 @@ public class Maze {
 			switch(movement) 
 			{
 			case RIGHT:
-				oldSquarePosition.setColumnIndex(tileSize-1);
+				oldSquarePosition.setColumnIndex(0);
 				break;
 			case LEFT:
-				oldSquarePosition.setColumnIndex(0);
+				oldSquarePosition.setColumnIndex(tileSize-1);
 				break;
 			case DOWN:
 				oldSquarePosition.setRowIndex(0);
@@ -185,20 +185,20 @@ public class Maze {
 		}
 	}
 	
-	private void updatePositions(Square newSquare, Square oldSquare) throws WeHaveAWinner, BadMovementDirection {
+	private void updatePositions(Square newSquare, Square oldSquare, Tile newTile) throws WeHaveAWinner, BadMovementDirection {
 		System.out.println("NEW SQUARE:" + newSquare);
 		System.out.println("OLD SQUARE:" + oldSquare);
 		if(newSquare.isFree() == true) 
 		{
 			System.out.println("PLAYER MOVES FREELY");
-			this.getPlayer().setPosition(new Position(newSquare, this.getPlayer().getPosition().getTile()));
+			this.getPlayer().setPosition(new Position(newSquare, newTile));
 			oldSquare.setContent(SquareType.FREE); // Player can only be on FREE Squares
 			newSquare.setContent(SquareType.PLAYER);
 		}
 		else if(newSquare.isGold() == true) 
 		{
 			System.out.println("PLAYER IS NOW ON GOLD");
-			this.getPlayer().setPosition(new Position(newSquare, this.getPlayer().getPosition().getTile()));
+			this.getPlayer().setPosition(new Position(newSquare, newTile));
 			oldSquare.setContent(SquareType.FREE); // Player can only be on FREE Squares
 			newSquare.setContent(SquareType.PLAYER);
 			throw new WeHaveAWinner("You won!\nCongratulations!");
@@ -217,6 +217,7 @@ public class Maze {
 	public void movePlayer(MovementType movement) throws UnknownMovementDirection, WeHaveAWinner, BadMovementDirection {
 		System.out.println("Moving: " + movement);
 		Square oldSquare = this.getPlayer().getPosition().getSquare();
+		System.out.println(this.getPlayer().getPosition());
 		try 
 		{
 			SquareIndex oldSquarePosition = this.getPlayer().getPosition().getTile().getPositionFromSquare(oldSquare);
@@ -257,14 +258,14 @@ public class Maze {
 			try {
 				Square newSquare = this.getPlayer().getPosition().getTile().getSquareFromPosition(oldSquarePosition);
 				System.out.println("Square: " + newSquare);
-				this.updatePositions(newSquare, oldSquare);	
+				this.updatePositions(newSquare, oldSquare, this.getPlayer().getPosition().getTile());	
 			}
 			// We're moving out the current Tile, calculating the next Tile is required!
 			catch(ArrayIndexOutOfBoundsException exception) {
 				System.out.println("Moving out current Tile!");
 				Tile newTile = this.nextTileFromMovement(movement);
-				//Square newSquare = this.nextSquareFromMovement(movement, newTile);
-				//this.updatePositions(newSquare, oldSquare);
+				Square newSquare = this.nextSquareFromMovement(movement, newTile);
+				this.updatePositions(newSquare, oldSquare, newTile);
 			}
 		}
 		// Square isn't located in the Tile from the current Player Position:

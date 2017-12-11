@@ -76,8 +76,15 @@ public class Controller {
 	}
 	
 	public void movePlayer(MovementType movement) throws UnknownMovementDirection, BadMovementDirection, WeHaveAWinner {
-		this.getMaze().movePlayer(movement);
-		this.getMainFrame().updateGame();
+		try 
+		{
+			this.getMaze().movePlayer(movement);
+			this.getMainFrame().updateGame();
+		}
+		catch(WeHaveAWinner exception) 
+		{
+			this.getMainFrame().updateGame(); // Enforce update when reaching gold
+			throw new WeHaveAWinner(exception.getMessage());
+		}
 	}
-	 
 }
