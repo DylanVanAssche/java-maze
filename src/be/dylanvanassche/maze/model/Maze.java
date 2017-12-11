@@ -48,6 +48,11 @@ public class Maze {
 		// create new player and enable gold
 		this.setPlayer(new Player(playerName));
 		this.getTiles().get((int)(Math.random()*4*Math.pow(mazeSize, 2))).enableGold();
+		Tile target = this.getTiles().get((int)(Math.random()*4*Math.pow(mazeSize, 2)));
+		while(target.getMiddleSquare().getContent() == SquareType.GOLD) { // It's never possible that the content is WALL
+			System.out.println("Collision GOLD and PLAYER");
+			target = this.getTiles().get((int)(Math.random()*4*Math.pow(mazeSize, 2)));
+		}
 		Position newPlayerPosition = this.getTiles().get((int)(Math.random()*4*Math.pow(mazeSize, 2))).enablePlayer();
 		this.getPlayer().setPosition(newPlayerPosition);
 	}

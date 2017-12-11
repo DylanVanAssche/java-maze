@@ -77,7 +77,6 @@ public abstract class Tile {
 		{
 			squaresTemp = this.transpose(squaresTemp);
 			squaresTemp = this.swap(squaresTemp);
-			System.out.println("Rotating :" + rotations);
 		}
 		this.setSquares(squaresTemp);
 	}
@@ -97,11 +96,15 @@ public abstract class Tile {
 		return tileString;
 	}
 	
+	public Square getMiddleSquare() {
+		return this.getSquares()[tileSize/2][tileSize/2];
+	}
+	
 	/*
 	 * @brief: set the Player in the middle of Tile on a specific Square.
 	 */
 	public void enableGold() {
-		this.getSquares()[tileSize/2][tileSize/2].setContent(SquareType.GOLD);
+		this.getMiddleSquare().setContent(SquareType.GOLD);
 	}
 	
 	/*
@@ -109,7 +112,7 @@ public abstract class Tile {
 	 * @return: Position
 	 */
 	public Position enablePlayer() {
-		this.getSquares()[tileSize/2][tileSize/2].setContent(SquareType.PLAYER);
+		this.getMiddleSquare().setContent(SquareType.PLAYER);
 		return new Position(this.getSquares()[tileSize/2][tileSize/2], this);
 	}
 

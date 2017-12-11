@@ -132,14 +132,15 @@ public class NavigationView extends JPanel {
 	}
 	
 	public void showUnknownMovementDirectionDialog(String msg) {
-		JOptionPane.showMessageDialog(this, msg);
+		JOptionPane.showMessageDialog(this, msg, "Oops!", JOptionPane.ERROR_MESSAGE);
 	}
 	
 	public void showBadMovementDirectionDialog(String msg) {
-		JOptionPane.showMessageDialog(this, msg);
+		JOptionPane.showMessageDialog(this, msg, "Oops!", JOptionPane.WARNING_MESSAGE);
 	}
 
 	public void showWeHaveAWinnerDialog(String msg) {
-		JOptionPane.showMessageDialog(this, msg);
+		JOptionPane.showConfirmDialog(this, msg, "End of the game", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE);
+		this.getController().newGame();
 	}
 }
