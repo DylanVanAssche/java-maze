@@ -107,46 +107,47 @@ public class Maze {
 	 * The UP and DOWN Tiles are 1 Math.pow(2*mazeSize, 2) away from the current Tile
 	 * @return: Tile
 	 */
-	private Tile nextTileFromMovement(MovementType movement) throws TileUnavailable, UnknownMovementDirection, BadMovementDirection {
+	private Tile nextTileFromMovement(MovementType movement) throws UnknownMovementDirection, BadMovementDirection {
 		// Retrieve the tileIndex by searching it in the ArrayList of Tiles
-		int tileIndex = -1;
+		int oldTileIndex = -1;
+		int newTileIndex = -1;
 		for(int i=0; i < Math.pow(2*mazeSize, 2)-1; i++) {
 			if(this.getPlayer().getPosition().getTile() == this.getTiles().get(i)) {
-				tileIndex = i;
+				oldTileIndex = i;
 			}
 		}
-		if(tileIndex == -1) {
-			throw new TileUnavailable("This Tile isn't located in the current Maze!");
-		}
-		System.out.println(tileIndex);
-		System.out.println(this.getTiles().get(tileIndex));
+		
 		// Calculate the new tileIndex
 		switch(movement) 
 		{
 		case LEFT:
-			tileIndex -= 1;
+			newTileIndex = oldTileIndex-1;
 			break;
 		case RIGHT:
-			tileIndex += 1;
+			newTileIndex = oldTileIndex+1;
 			break;
 		case DOWN:
-			tileIndex += 2*mazeSize;
+			newTileIndex = oldTileIndex+2*mazeSize;
 			break;
 		case UP:
-			tileIndex -= 2*mazeSize;
+			newTileIndex = oldTileIndex-2*mazeSize;
 			break;
 		default:
-			throw new UnknownMovementDirection();
+			throw new UnknownMovementDirection("MovementType is unknown!");
 		}
 		
-		System.out.println(tileIndex);
-		System.out.println(this.getTiles().get(tileIndex));
+		// If invalid oldTileIndex or movement is between 2 sides of the Maze, throw exception
+		/*if((oldTileIndex == -1) || (newTileIndex%3 == 0 && oldTileIndex%4 == 0) || (oldTileIndex%3 == 0 || newTileIndex%4 == 0))
+		{
+			throw new BadMovementDirection("You can't move through walls! (1)");
+		}*/
+		
 		try {
-			return this.getTiles().get(tileIndex);
+			return this.getTiles().get(newTileIndex);
 		}
-		catch(ArrayIndexOutOfBoundsException exception) {
-			System.out.println("PLAYER MOVE TO WALL");
-			throw new BadMovementDirection("You can't move through walls!");
+		catch(IndexOutOfBoundsException exception) {
+			System.out.println("PLAYER MOVES TO WALL, INDEX: " + newTileIndex);
+			throw new BadMovementDirection("You can't move through walls! (2)");
 		}
 	}
 	
