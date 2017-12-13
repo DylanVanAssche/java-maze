@@ -44,6 +44,7 @@ public class MainFrame extends JFrame {
 		this.setJMenuBar(new MenuBar(this.getController()));
 		this.pack();
 		this.setResizable(false);
+		this.setTitle(this.getController().getName());
 		this.setVisible(true);
 	}
 	
