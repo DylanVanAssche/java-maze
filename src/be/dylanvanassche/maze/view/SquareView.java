@@ -2,15 +2,19 @@
 package be.dylanvanassche.maze.view;
 
 import java.awt.*;
+import java.awt.image.*;
+import java.io.File;
+import java.io.IOException;
+import javax.imageio.ImageIO;
 import javax.swing.*;
-import be.dylanvanassche.maze.controller.*;
-import be.dylanvanassche.maze.model.Square;
+import be.dylanvanassche.maze.controller.Controller;
+import be.dylanvanassche.maze.model.*;
 import be.dylanvanassche.maze.view.*;
 
 public class SquareView extends JPanel {
-private Controller controller;
-private Square square;
-	
+	private Controller controller;
+	private Square square;
+
 	public Controller getController() {
 		return controller;
 	}
@@ -18,7 +22,7 @@ private Square square;
 	public void setController(Controller controller) {
 		this.controller = controller;
 	}
-	
+
 	public Square getSquare() {
 		return square;
 	}
@@ -31,7 +35,7 @@ private Square square;
 		this.setController(c);
 		this.setSquare(s);
 		this.setLayout(new FlowLayout());
-		this.add(new JLabel(this.getSquare().toString()));
+		this.add(new SquareViewElement(this.getSquare().getContent()));
 		this.setVisible(true);
 	}
 }

@@ -22,7 +22,7 @@ public class Square {
 			return "$";
 		}
 		else if(this.isWall()) {
-			return "▉";
+			return "#";
 		}
 		else if(this.isPlayer()) {
 			return "X";

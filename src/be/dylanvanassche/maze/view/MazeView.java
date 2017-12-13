@@ -22,7 +22,7 @@ public class MazeView extends JPanel {
 
 	public MazeView(final Controller c) {
 		this.setController(c);
-		this.setLayout(new GridLayout(0,4));
+		this.setLayout(new GridLayout(0,4,0,0)); // gap = 0
 		this.newGame();
 		this.setVisible(true);
 	}

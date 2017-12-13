@@ -128,6 +128,10 @@ public class NavigationView extends JPanel {
 				}
 			}
 		});
+		this.getUpButton().setMnemonic(KeyEvent.VK_UP); // ALT required
+		this.getDownButton().setMnemonic(KeyEvent.VK_DOWN);
+		this.getLeftButton().setMnemonic(KeyEvent.VK_LEFT);
+		this.getRightButton().setMnemonic(KeyEvent.VK_RIGHT);
 		this.setVisible(true);
 	}
 	

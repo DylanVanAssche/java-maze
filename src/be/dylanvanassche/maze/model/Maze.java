@@ -53,7 +53,7 @@ public class Maze {
 	/*
 	 * @brief: constructs a new random Maze
 	 */
-	public Maze(String playerName) {
+	public Maze() {
 		// n^2 tiles
 		for(int i=0; i<mazeSize*2; i++) {
 			for(int j=0; j<mazeSize*2; j++) {
@@ -62,7 +62,7 @@ public class Maze {
 		}
 
 		// create new player and enable gold and void collision
-		this.setPlayer(new Player(playerName));
+		this.setPlayer(new Player());
 		this.getTiles()[(int)(Math.random()*2*mazeSize)][(int)(Math.random()*2*mazeSize)].enableGold();
 		Tile target = this.getTiles()[(int)(Math.random()*2*mazeSize)][(int)(Math.random()*2*mazeSize)];
 		while(target.getMiddleSquare().getContent() == SquareType.GOLD) { // It's never possible that the content is WALL
@@ -227,7 +227,7 @@ public class Maze {
 			this.getPlayer().setPosition(new Position(newSquare, newTile));
 			oldSquare.setContent(SquareType.FREE); // Player can only be on FREE Squares
 			newSquare.setContent(SquareType.PLAYER);
-			throw new WeHaveAWinner("You won!\nCongratulations!");
+			throw new WeHaveAWinner("You won!\nCongratulations " + this.getPlayer().getName() + "!");
 		}
 		else 
 		{

@@ -22,7 +22,6 @@ public class Player {
 		this.position = position;
 	}
 	
-	public Player(String name) {
-		this.setName(name);
+	public Player() {
 	}
 }

@@ -29,7 +29,7 @@ public class TileView extends JPanel {
 	public TileView(final Controller c, Tile tile) {
 		this.setController(c);
 		this.setTile(tile);
-		this.setLayout(new GridLayout(0,3));
+		this.setLayout(new GridLayout(0,3,0,0)); // gap = 0
 		for(int i = 0; i < 9; i++) {
 			this.add(new SquareView(this.getController(), this.getTile().nextSquare()));
 		}

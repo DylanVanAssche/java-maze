@@ -49,7 +49,7 @@ public class Controller {
 	
 	public Controller() {
 		// Player name screen can be added in the future as extension
-		this.setMaze(new Maze("Hermanneke"));
+		this.setMaze(new Maze());
 		this.setMainFrame(new MainFrame(this));
 	}
 	
@@ -70,8 +70,7 @@ public class Controller {
 	}
 	
 	public void newGame() {
-		this.setMaze(new Maze("Joske"));
-		System.out.println(this.getMaze().getPlayer().getName());
+		this.setMaze(new Maze());
 		this.getMainFrame().newGame();
 	}
 	
@@ -86,5 +85,9 @@ public class Controller {
 			this.getMainFrame().updateGame(); // Enforce update when reaching gold
 			throw new WeHaveAWinner(exception.getMessage());
 		}
+	}
+
+	public void setPlayerName(String name) {
+		this.getMaze().getPlayer().setName(name);
 	}
 }
