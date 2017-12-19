@@ -10,6 +10,7 @@ public class MainFrame extends JFrame {
 	private Controller controller;
 	private MazeView mazeView;
 	private NavigationView navigationView;
+	private JScrollPane scrollView;
 	
 	public Controller getController() {
 		return controller;
@@ -35,6 +36,14 @@ public class MainFrame extends JFrame {
 		this.navigationView = navigationView;
 	}
 
+	public JScrollPane getScrollView() {
+		return scrollView;
+	}
+
+	public void setScrollView(JScrollPane scrollView) {
+		this.scrollView = scrollView;
+	}
+
 	public MainFrame(final Controller c) {
 		this.setController(c);
 		this.getContentPane().setLayout(new BorderLayout());
@@ -56,7 +65,9 @@ public class MainFrame extends JFrame {
 		this.getController().setPlayerName(name);
 		this.getContentPane().removeAll(); // clean it up
 		this.setMazeView(new MazeView(this.getController()));
-		this.getContentPane().add(this.getMazeView(), BorderLayout.CENTER);
+		this.setScrollView(new JScrollPane(this.getMazeView()));
+		this.getMazeView().setAutoscrolls(true);
+		this.getContentPane().add(this.getScrollView(), BorderLayout.CENTER);
 		this.getContentPane().add(this.getNavigationView(), BorderLayout.SOUTH);
 		// Revalidates the component hierarchy, when adding/removing stuff at runtime you need to reload the UI, 
 		// this is NOT repaint since we add/remove the components completely without modifying their properties!

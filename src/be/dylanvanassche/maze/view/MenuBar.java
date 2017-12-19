@@ -12,7 +12,10 @@ public class MenuBar extends JMenuBar {
 	private Controller controller;
 	private JMenu gameMenu = new JMenu("Game");
 	private JMenu aboutMenu = new JMenu("About");
-	private JMenuItem newGameMenu = new JMenuItem("New");
+	private JMenu newGameMenu = new JMenu("New");
+	private JMenuItem newGame2Menu = new JMenuItem("2x2");
+	private JMenuItem newGame4Menu = new JMenuItem("4x4");
+	private JMenuItem newGame8Menu = new JMenuItem("8x8");
 	private JMenuItem exitGameMenu = new JMenuItem("Exit");
 	private JMenuItem ApplicationAboutMenu = new JMenuItem("Application"); // Needs icon
 	private JMenuItem GithubAboutMenu = new JMenuItem("GitHub"); // Needs icon
@@ -41,12 +44,36 @@ public class MenuBar extends JMenuBar {
 		this.aboutMenu = aboutMenu;
 	}
 
-	public JMenuItem getNewGameMenu() {
+	public JMenu getNewGameMenu() {
 		return newGameMenu;
 	}
 
-	public void setNewGameMenu(JMenuItem newGameMenu) {
+	public void setNewGameMenu(JMenu newGameMenu) {
 		this.newGameMenu = newGameMenu;
+	}
+	
+	public JMenuItem getNewGame2Menu() {
+		return newGame2Menu;
+	}
+
+	public void setNewGame2Menu(JMenuItem newGame2Menu) {
+		this.newGame2Menu = newGame2Menu;
+	}
+
+	public JMenuItem getNewGame4Menu() {
+		return newGame4Menu;
+	}
+
+	public void setNewGame4Menu(JMenuItem newGame4Menu) {
+		this.newGame4Menu = newGame4Menu;
+	}
+
+	public JMenuItem getNewGame8Menu() {
+		return newGame8Menu;
+	}
+
+	public void setNewGame8Menu(JMenuItem newGame8Menu) {
+		this.newGame8Menu = newGame8Menu;
 	}
 
 	public JMenuItem getExitGameMenu() {
@@ -79,14 +106,28 @@ public class MenuBar extends JMenuBar {
 		this.add(Box.createHorizontalGlue());
 		this.add(getAboutMenu());
 		this.getGameMenu().add(this.getNewGameMenu());
+		this.getNewGameMenu().add(this.getNewGame2Menu());
+		this.getNewGameMenu().add(this.getNewGame4Menu());
+		this.getNewGameMenu().add(this.getNewGame8Menu());
 		this.getGameMenu().add(this.getExitGameMenu());
 		this.getAboutMenu().add(this.getApplicationAboutMenu());
 		this.getAboutMenu().add(this.getGithubAboutMenu());
 		this.getNewGameMenu().setToolTipText("Start a new game");
-		this.getNewGameMenu().addActionListener(new ActionListener() {
+		this.getNewGame2Menu().addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent event) {
-				//getController().newGame();
-				//getView().newGame();
+				getController().setMazeSize(2);
+				getController().newGame();
+			}
+		});
+		this.getNewGame4Menu().addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent event) {
+				getController().setMazeSize(4);
+				getController().newGame();
+			}
+		});
+		this.getNewGame8Menu().addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent event) {
+				getController().setMazeSize(8);
 				getController().newGame();
 			}
 		});

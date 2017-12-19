@@ -72,7 +72,6 @@ public class SquareViewElement extends JComponent {
 			this.setFreeImg(ImageIO.read(new File(FREE_PATH)));
 		} 
 		catch (IOException e) {
-			
 			e.printStackTrace();
 		}
 	}
@@ -84,21 +83,21 @@ public class SquareViewElement extends JComponent {
 	
 	@Override
 	protected void paintComponent(Graphics graphics) {
-		//super.paintComponent(graphics);
+		super.paintComponent(graphics); 
 		switch(this.getContent())
 		{
 		case WALL:
 			graphics.drawImage(this.getWallImg(), 0, 0, IMG_SIZE, IMG_SIZE, null);
 			break;
 		case PLAYER:
-			graphics.drawImage(this.getPlayerImg(), 0, 0, IMG_SIZE, IMG_SIZE, this);
+			graphics.drawImage(this.getPlayerImg(), 0, 0, IMG_SIZE, IMG_SIZE, null);
 			break;
 		case GOLD:
-			graphics.drawImage(this.getGoldImg(), 0, 0, IMG_SIZE, IMG_SIZE, this);
+			graphics.drawImage(this.getGoldImg(), 0, 0, IMG_SIZE, IMG_SIZE, null);
 			break;
 		default:
 		case FREE:
-			graphics.drawImage(this.getFreeImg(), 0, 0, IMG_SIZE, IMG_SIZE, this);
+			graphics.drawImage(this.getFreeImg(), 0, 0, IMG_SIZE, IMG_SIZE, null);
 			break;
 		}
 

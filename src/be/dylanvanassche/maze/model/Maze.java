@@ -2,7 +2,7 @@
 package be.dylanvanassche.maze.model;
 
 public class Maze {
-	public static final int mazeSize = 2; // define n
+	public static int mazeSize = 2; // define n
 	public static final int tileSize = 3;
 	private int currentTileIndex = 0;
 	private int currentTileIndexRow = 0;
@@ -49,6 +49,14 @@ public class Maze {
 	public void setTiles(Tile[][] tiles) {
 		this.tiles = tiles;
 	}
+	
+	public static int getMazeSize() {
+		return mazeSize;
+	}
+
+	public static void setMazeSize(int mazeSize) {
+		Maze.mazeSize = mazeSize;
+	}
 
 	/*
 	 * @brief: constructs a new random Maze
@@ -68,7 +76,7 @@ public class Maze {
 		while(target.getMiddleSquare().getContent() == SquareType.GOLD) { // It's never possible that the content is WALL
 			target = this.getTiles()[(int)(Math.random()*2*mazeSize)][(int)(Math.random()*2*mazeSize)];
 		}
-		Position newPlayerPosition = this.getTiles()[(int)(Math.random()*2*mazeSize)][(int)(Math.random()*2*mazeSize)].enablePlayer();
+		Position newPlayerPosition = target.enablePlayer();
 		this.getPlayer().setPosition(newPlayerPosition);
 	}
 	
@@ -139,7 +147,6 @@ public class Maze {
 		// Retrieve the tileIndex by searching it in the ArrayList of Tiles
 		int oldTileIndexRow = -1;
 		int oldTileIndexColumn = -1;
-		int newTileIndex = -1;
 		for(int i=0; i<mazeSize*2; i++) {
 			for(int j=0; j<mazeSize*2; j++) {
 				if(this.getPlayer().getPosition().getTile() == this.getTiles()[i][j]) {

@@ -90,4 +90,12 @@ public class Controller {
 	public void setPlayerName(String name) {
 		this.getMaze().getPlayer().setName(name);
 	}
+	
+	public void setMazeSize(int size) {
+		Maze.setMazeSize(size);
+	}
+	
+	public int getMazeSize() {
+		return Maze.getMazeSize();
+	}
 }
