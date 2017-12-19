@@ -2,14 +2,9 @@
 package be.dylanvanassche.maze.view;
 
 import java.awt.*;
-import java.awt.image.*;
-import java.io.File;
-import java.io.IOException;
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import be.dylanvanassche.maze.controller.Controller;
 import be.dylanvanassche.maze.model.*;
-import be.dylanvanassche.maze.view.*;
 
 public class SquareView extends JPanel {
 	private Controller controller;

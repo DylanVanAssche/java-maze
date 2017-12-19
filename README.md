@@ -4,12 +4,15 @@ A simple maze game written in Java following the MVC principles.
 ## Features
 - MVC principles written in Java
 - Find the gold in the maze
-- Full GUI
-- Player name
+- Full GUI with basic icons
+- Customize the name of the player
+- Key navigation (ALT + arrow keys)
+- Generate a maze with a different size (2x2, 4x4 or 8x8)
+- Scrollbars if the maze is too big for the screen
 
 ## To do
 - Backtracking algorithm to generate a solvable maze.
-- Key bindings for the navigation of the player.
+- Implement a real key listener for key navigation.
 
 ## Screenshots
 ![screenshot1](/docs/java-maze.png)
